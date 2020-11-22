@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "809636932593",
+    "firebase_url": "https://demouber-b99a1.firebaseio.com",
+    "project_id": "demouber-b99a1",
+    "storage_bucket": "demouber-b99a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809636932593:android:e11d825a6822f0df333250",
+        "android_client_info": {
+          "package_name": "com.example.final_user_uber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809636932593-vsgj7omp29iog7r5pasjio52qkpr62u1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDekCAE0Vv85yx3dFJm7MqDtEphnHqZfes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809636932593-vsgj7omp29iog7r5pasjio52qkpr62u1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
