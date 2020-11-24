@@ -1,6 +1,7 @@
 package com.example.final_user_uber.ui.home;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -83,15 +84,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private LocationCallback locationCallback;
 
 
-    //Load Driver
-    private double instance = 1.0;
-    private static final double LIMIT_RANGE = 10.0;// < 10m
-    private Location previousLocation,currentLocation;//use to calculate distance
+//    //Load Driver
+//    private double instance = 1.0;
+//    private static final double LIMIT_RANGE = 10.0;// < 10m
+//    private Location previousLocation,currentLocation;//use to calculate distance
 
 
-    //Listener
-    IFirebaseDriverInfoListener iFirebaseDriverInfoListener;
-    IFireFailedListener iFireFailedListener;
+//    //Listener
+//    IFirebaseDriverInfoListener iFirebaseDriverInfoListener;
+//    IFireFailedListener iFireFailedListener;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -153,9 +154,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
         locationRequest = new LocationRequest();
-        locationRequest.setSmallestDisplacement(10f);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(3000);
+        locationRequest.setSmallestDisplacement(50f); // 50m
+        locationRequest.setInterval(15000); //15sec
+        locationRequest.setFastestInterval(10000); //10sec
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         locationCallback = new LocationCallback() {
