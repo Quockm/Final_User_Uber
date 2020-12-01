@@ -91,9 +91,10 @@
     <Button
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:id="@+id/btn_register"
-        style="@style/Widget.MaterialComponents.Button"
         android:text="@string/continue_text"
-        android:layout_marginBottom="16dp"/>
+        android:background="@drawable/custom_button"
+        android:layout_marginBottom="20dp"/>
 </RelativeLayout>

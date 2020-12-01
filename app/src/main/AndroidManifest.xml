@@ -12,10 +12,9 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Final_User_Uber">
+        android:theme="@style/AppTheme.NoActionBar">
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -32,6 +31,7 @@
             android:name=".DriverHomeActivity"
             android:label="@string/title_activity_driver_home"
             android:theme="@style/Theme.Final_User_Uber.NoActionBar" />
+
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

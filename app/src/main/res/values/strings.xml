@@ -24,4 +24,13 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="wellcome">Wellcome</string>
     <string name="permisson_require">permission_require</string>
+
+    <string name="motaxigo">MotaxiGo</string>
+    <string name="get_in_the_car_and_feel_the_live">Get in the car and enjoy your ride</string>
+    <string name="version">v 0.0.1</string>
+    <string name="decline">Decline</string>
+    <string name="token_not_found">Token not Found</string>
+    <string name="decline_failed">Decline Failed</string>
+    <string name="decline_succesed">Decline Success</string>
+    <string name="rider">This is an App for Driver</string>
 </resources>
