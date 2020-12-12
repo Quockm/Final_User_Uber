@@ -33,8 +33,8 @@ public class UserUtils {
                 .getReference(Common.DRIVER_INFO_REFERENCE)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .updateChildren(updateData)
-                .addOnFailureListener(e -> Snackbar.make(view,e.getMessage(),Snackbar.LENGTH_SHORT).show())
-                .addOnSuccessListener(aVoid -> Snackbar.make(view,"Update information Successfully!",Snackbar.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> Snackbar.make(view, "Update information Successfully!", Snackbar.LENGTH_SHORT).show());
     }
 
     public static void updateToken(Context context, String token) {
@@ -43,7 +43,7 @@ public class UserUtils {
                 .getReference(Common.TOKEN_REFERENCE)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .setValue(tokenModel)
-                .addOnFailureListener(e -> Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show())
                 .addOnSuccessListener(aVoid -> {
 
                 });
@@ -69,46 +69,104 @@ public class UserUtils {
 
                             TokenModel tokenModel = dataSnapshot.getValue(TokenModel.class);
                             Map<String, String> notificationData = new HashMap<>();
-                            notificationData.put(Common.NOTI_TITLE,Common.REQUEST_DRIVER_DECLINE);
-                            notificationData.put(Common.NOTI_CONTENT,"This message represent for driver decline user request");
-                            notificationData.put(Common.DRIVER_KEY,FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            notificationData.put(Common.NOTI_TITLE, Common.REQUEST_DRIVER_DECLINE);
+                            notificationData.put(Common.NOTI_CONTENT, "This message represent for driver decline user request");
+                            notificationData.put(Common.DRIVER_KEY, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
 
-                            FCMSendData fcmSendData = new FCMSendData(tokenModel.getToken(),notificationData);
+                            FCMSendData fcmSendData = new FCMSendData(tokenModel.getToken(), notificationData);
 
                             compositeDisposable.add(ifcmService.sendNotification(fcmSendData)
                                     .subscribeOn(Schedulers.newThread())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(fcmResponse -> {
-                                        if(fcmResponse.getSuccess()==0)
-                                        {
+                                        if (fcmResponse.getSuccess() == 0) {
                                             compositeDisposable.clear();
-                                            Snackbar.make(view,context.getString(R.string.decline_failed)
-                                                    ,Snackbar.LENGTH_LONG).show();
-                                        }
-                                        else
-                                        {
-                                            Snackbar.make(view,context.getString(R.string.decline_succesed)
-                                                    ,Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(view, context.getString(R.string.decline_failed)
+                                                    , Snackbar.LENGTH_LONG).show();
+                                        } else {
+                                            Snackbar.make(view, context.getString(R.string.decline_succesed)
+                                                    , Snackbar.LENGTH_LONG).show();
                                         }
 
                                     }, throwable -> {
                                         compositeDisposable.clear();
-                                        Snackbar.make(view,throwable.getMessage()
-                                                ,Snackbar.LENGTH_LONG).show();
+                                        Snackbar.make(view, throwable.getMessage()
+                                                , Snackbar.LENGTH_LONG).show();
 
                                     }));
 
 
                         } else {
-
-                            Snackbar.make(view,context.getString(R.string.token_not_found)
-                                    ,Snackbar.LENGTH_LONG).show();
+                            compositeDisposable.clear();
+                            Snackbar.make(view, context.getString(R.string.token_not_found)
+                                    , Snackbar.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+                        compositeDisposable.clear();
+                        Snackbar.make(view, error.getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    public static void sendAcceptRequestToRider(View view, Context context, String key, String tripNumberID) {
+
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        IFCMService ifcmService = RetrofitFCMClient.getInstance().create(IFCMService.class);
+
+
+        //get token
+        FirebaseDatabase
+                .getInstance()
+                .getReference(Common.TOKEN_REFERENCE)
+                .child(key)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+                            TokenModel tokenModel = dataSnapshot.getValue(TokenModel.class);
+                            Map<String, String> notificationData = new HashMap<>();
+                            notificationData.put(Common.NOTI_TITLE, Common.REQUEST_DRIVER_ACCEPT);
+                            notificationData.put(Common.NOTI_CONTENT, "This message represent for driver accept user request");
+                            notificationData.put(Common.DRIVER_KEY, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            notificationData.put(Common.TRIP_KEY, tripNumberID);
+
+
+                            FCMSendData fcmSendData = new FCMSendData(tokenModel.getToken(), notificationData);
+
+                            compositeDisposable.add(ifcmService.sendNotification(fcmSendData)
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(fcmResponse -> {
+                                        if (fcmResponse.getSuccess() == 0) {
+                                            compositeDisposable.clear();
+                                            Snackbar.make(view, context.getString(R.string.accept_failed)
+                                                    , Snackbar.LENGTH_LONG).show();
+
+                                        }
+
+                                    }, throwable -> {
+                                        compositeDisposable.clear();
+                                        Snackbar.make(view, throwable.getMessage()
+                                                , Snackbar.LENGTH_LONG).show();
+
+                                    }));
+
+
+                        } else {
+                            compositeDisposable.clear();
+                            Snackbar.make(view, context.getString(R.string.token_not_found)
+                                    , Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        compositeDisposable.clear();
                         Snackbar.make(view, error.getMessage(), Snackbar.LENGTH_LONG).show();
                     }
                 });

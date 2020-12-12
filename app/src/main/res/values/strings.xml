@@ -33,4 +33,6 @@
     <string name="decline_failed">Decline Failed</string>
     <string name="decline_succesed">Decline Success</string>
     <string name="rider">This is an App for Driver</string>
+    <string name="rider_not_found">Rider not Found</string>
+    <string name="accept_failed">accept failed</string>
 </resources>
