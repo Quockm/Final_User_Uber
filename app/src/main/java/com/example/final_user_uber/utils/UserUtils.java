@@ -1,6 +1,7 @@
 package com.example.final_user_uber.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -55,6 +56,7 @@ public class UserUtils {
 
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         IFCMService ifcmService = RetrofitFCMClient.getInstance().create(IFCMService.class);
+
 
 
         //get token

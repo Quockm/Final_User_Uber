@@ -23,19 +23,26 @@ import java.util.Random;
 public class Common {
     public static final String DRIVER_INFO_REFERENCE = "DriverInfo";
     public static final String DRIVER_LOCATION_REFERENCE = "DriverLocation";
+
     public static final String TOKEN_REFERENCE = "Token";
     public static final String NOTI_TITLE = "Title";
     public static final String NOTI_CONTENT = "body";
-    public static final String RIDER_PICKUP_LOCATION = "PickupLocation";
+
+
     public static final String RIDER_KEY = "RiderKey";
-    public static final String REQUEST_DRIVER_TITLE = "RequestDriver";
-    public static final String REQUEST_DRIVER_DECLINE = "Decline";
     public static final String DRIVER_KEY = "DriverKey";
+
+    public static final String REQUEST_DRIVER_TITLE = "RequestDriver";
+
+    public static final String REQUEST_DRIVER_DECLINE = "Decline";
+    public static final String REQUEST_DRIVER_ACCEPT = "Accept" ;
+
+    public static final String RIDER_PICKUP_LOCATION = "PickupLocation";
     public static final String RIDER_PICKUP_LOCATION_STRING = "PickupLocationString";
     public static final String RIDER_DESTINATION_STRING = "DestinationLocationString";
     public static final String RIDER_DESTINATION = "DestinationLocation";
     public static final String RIDER_INFO = "RiderInfo"; // same name of Rider reference on your Firebase
-    public static final String REQUEST_DRIVER_ACCEPT = "Accept" ;
+
     public static final String TRIP_KEY = "TripKey";
 
     public static DriverInfoModel currentUser;

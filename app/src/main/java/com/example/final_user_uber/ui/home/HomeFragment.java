@@ -322,13 +322,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                         if (error != null)
                                             Snackbar.make(mapFragment.getView(), error.getMessage(), Snackbar.LENGTH_LONG)
                                                     .show();
-//                                else {
-//                                    if (isFirstTime) {
-//                                            Snackbar.make(mapFragment.getView(), "You're Online", Snackbar.LENGTH_LONG)
-//                                                    .show();
-//                                        isFirstTime = false;
-//                                    }
-//                                }
+
                                     });
                             registerOnlineSystem();
 
