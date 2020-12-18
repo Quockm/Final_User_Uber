@@ -4,12 +4,14 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -139,6 +141,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     LoadingButton loadingButton;
 
     private String tripNumberID = "";
+    private static String mRiderPhoneNumber = "";
 
     //Routers
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -176,6 +179,22 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mMap.clear();
             UserUtils.sendDeclineRequest(root_layout, getContext(), driverRequestReceived.getKey());
             driverRequestReceived = null;
+        }
+    }
+
+    @OnClick(R.id.img_phone_call)
+    void onCallPhone(){
+        if (layout_start_uber.getVisibility() == View.VISIBLE
+                && !mRiderPhoneNumber.isEmpty()){
+            try{
+                if (this.getActivity().checkCallingOrSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
+                    Intent callPhone = new Intent(Intent.ACTION_CALL);
+                    callPhone.setData(Uri.parse(mRiderPhoneNumber));
+                    this.getActivity().startActivity(callPhone);
+                }
+            }catch (Exception e){
+                Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -618,6 +637,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                                         tripPlanModel.setCurrentLng(location.getLongitude());
 
                                                         tripNumberID = Common.createUniqueTripIdNumber(timeOffset);
+
+                                                        if (tripPlanModel.getRiderModel() != null){
+                                                            mRiderPhoneNumber = tripPlanModel.getRiderModel().getPhonenumber() == null
+                                                                    ? "" : tripPlanModel.getRiderModel().getPhonenumber();
+                                                        }
 
                                                         FirebaseDatabase.getInstance()
                                                                 .getReference(Common.Trip)
