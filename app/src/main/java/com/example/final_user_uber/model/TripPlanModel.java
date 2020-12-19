@@ -10,6 +10,7 @@ public class TripPlanModel {
     private String durationPickup, durationDestination;
     private double currentLat, currentLng;
     private boolean isDone, isCancel;
+    private String addressorigin,addressDestination;
 
     public TripPlanModel() {
     }
@@ -140,5 +141,21 @@ public class TripPlanModel {
 
     public void setCancel(boolean cancel) {
         isCancel = cancel;
+    }
+
+    public String getAddressorigin() {
+        return addressorigin;
+    }
+
+    public void setAddressorigin(String addressorigin) {
+        this.addressorigin = addressorigin;
+    }
+
+    public String getAddressDestination() {
+        return addressDestination;
+    }
+
+    public void setAddressDestination(String addressDestination) {
+        this.addressDestination = addressDestination;
     }
 }

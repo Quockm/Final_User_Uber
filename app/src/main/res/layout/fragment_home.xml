@@ -200,6 +200,34 @@
                 android:layout_marginBottom="16dp"
                 android:background="#B8B6B8" />
 
+            <LinearLayout
+                android:id="@+id/layout_notify_rider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_notify_rider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="02:00"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/uber_move"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_notify"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:min="0"
+                    android:max="120"
+                    android:indeterminate="false"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -231,18 +259,40 @@
 
             </RelativeLayout>
 
-            <com.kusu.loadingbutton.LoadingButton
-                android:id="@+id/loadingButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="Start Uber"
-                android:fontFamily="@font/uber_move_bold"
-                android:textColor="@color/white"
-                app:lb_buttonColor="@color/start_button"
-                app:lb_isCircular="false" />
+           <FrameLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+
+               <com.kusu.loadingbutton.LoadingButton
+                   android:id="@+id/loadingButton"
+                   android:enabled="false"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="20dp"
+                   android:paddingLeft="10dp"
+                   android:paddingRight="10dp"
+                   android:text="@string/start_uber"
+                   android:fontFamily="@font/uber_move_bold"
+                   android:textColor="@color/white"
+                   app:lb_buttonColor="@color/start_button"
+                   app:lb_isCircular="false" />
+
+               <com.kusu.loadingbutton.LoadingButton
+                   android:id="@+id/loadingButton_complete_trip"
+                   android:enabled="false"
+                   android:visibility="gone"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="20dp"
+                   android:paddingLeft="10dp"
+                   android:paddingRight="10dp"
+                   android:text="@string/complete_trip"
+                   android:fontFamily="@font/uber_move_bold"
+                   android:textColor="@color/white"
+                   app:lb_buttonColor="@color/start_button"
+                   app:lb_isCircular="false" />
+
+           </FrameLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

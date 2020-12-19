@@ -25,7 +25,8 @@ public class Common {
     public static final String DRIVER_LOCATION_REFERENCE = "DriverLocation";
 
     public static final String TOKEN_REFERENCE = "Token";
-    public static final String TOKEN_DRIVER_REFERENCE = "Token_Driver";
+    public static final String TOKEN_RIDER_REFERENCE = "Token_Rider";
+
 
     public static final String NOTI_TITLE = "Title";
     public static final String NOTI_CONTENT = "body";
@@ -37,7 +38,7 @@ public class Common {
     public static final String REQUEST_DRIVER_TITLE = "RequestDriver";
 
     public static final String REQUEST_DRIVER_DECLINE = "Decline";
-    public static final String REQUEST_DRIVER_ACCEPT = "Accept" ;
+    public static final String REQUEST_DRIVER_ACCEPT = "Accept";
 
     public static final String RIDER_PICKUP_LOCATION = "PickupLocation";
     public static final String RIDER_PICKUP_LOCATION_STRING = "PickupLocationString";
@@ -46,6 +47,11 @@ public class Common {
     public static final String RIDER_INFO = "RiderInfo"; // same name of Rider reference on your Firebase
 
     public static final String TRIP_KEY = "TripKey";
+    public static final String TRIP_PICKUP_REF = "TripPickupLocation";
+    public static final double MIN_RANGE_PICKUP_IN_KM = 0.05; //50m
+    public static final int WAIT_TIME_IN_MIN = 1;
+    public static final String TRIP_DESTINATION_LOCATION_REF = "TripDestinationLocation";
+    public static final String REQUEST_DRIVER_DECLINE_AND_REMOVE = "DeclineAndRemoveTrip";
 
     public static DriverInfoModel currentUser;
     public static String Trip = "Trips";
