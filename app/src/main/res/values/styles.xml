@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">#F7D905</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
@@ -13,8 +13,8 @@
     </style>
 
     <style name="LoginTheme" parent="FirebaseUI">
-        <item name="colorPrimary">#00BCD4</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#ffffffff</item>
+        <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">#00BCD4</item>
 
         <item name="colorButtonNormal">#00BCD4</item>
@@ -33,6 +33,13 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:windowFullscreen">true</item>
 
+        <item name="android:windowActionBarOverlay">true</item>
+
+        <item name="android:actionBarStyle">@style/FirebaseAuthActionBarStyle</item>
+
+    </style>
+    <style name="FirebaseAuthActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/white</item>
     </style>
 
 

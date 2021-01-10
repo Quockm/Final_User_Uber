@@ -102,6 +102,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -231,6 +232,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         }
     };
+
     private GeoQueryEventListener destinationGeoQueryListener = new GeoQueryEventListener() {
         @Override
         public void onKeyEntered(String key, GeoLocation location) {
@@ -336,6 +338,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         if (waiting_time != null) waiting_time.cancel();
         layout_notify_rider.setVisibility(View.GONE);
         if (driverRequestReceived != null) {
+            UserUtils.sendStartripToRider(mapFragment.requireView(), getContext(), driverRequestReceived.getKey(),
+                    tripNumberID);
             LatLng destinationLatLng = new LatLng(
                     Double.parseDouble(driverRequestReceived.getDestinationLocation().split(",")[0]),
                     Double.parseDouble(driverRequestReceived.getDestinationLocation().split(",")[1])
@@ -354,9 +358,64 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     @OnClick(R.id.loadingButton_complete_trip)
         //Complete Click
+
     void onCompleteUberClick() {
-        Toast.makeText(getContext(), "Complete Trip Test action", Toast.LENGTH_SHORT)
-                .show();
+        //update trip set done to true
+        Map<String, Object> update_trip = new HashMap<>();
+        update_trip.put("done", true);
+        FirebaseDatabase.getInstance()
+                .getReference(Common.Trip)
+                .child(tripNumberID)
+                .updateChildren(update_trip)
+                .addOnFailureListener(e -> {
+                    Snackbar.make(requireView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                })
+                .addOnSuccessListener(unused -> {
+                    //get Location
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                        return;
+                    }
+                    fusedLocationProviderClient.getLastLocation()
+                            .addOnFailureListener(e -> {
+                                Snackbar.make(requireView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                            })
+                            .addOnSuccessListener(location -> {
+                                UserUtils.sendCompleteTripToRider(mapFragment.requireView(), getContext(), driverRequestReceived.getKey(),
+                                        tripNumberID);
+
+                                //clear map
+                                mMap.clear();
+                                tripNumberID = ""; //Set tripnumberID to Empty
+                                isTripStart = false; // Return ogrional stage
+                                chip_decline.setVisibility(View.GONE);
+
+                                layout_accept.setVisibility(View.GONE);
+                                circularProgressBar.setProgress(0);
+
+                                layout_start_uber.setVisibility(View.GONE);
+
+                                layout_notify_rider.setVisibility(View.GONE);
+                                progress_notify.setVisibility(View.GONE);
+
+                                loadingButton_complete_trip.setEnabled(false);
+                                loadingButton_complete_trip.setVisibility(View.GONE);
+
+                                loadingButton.setEnabled(false);
+                                loadingButton.setVisibility(View.GONE);
+
+                                destinationGeoFire = null;
+                                pickupGeoFire = null;
+
+                                driverRequestReceived = null;
+                                makeDriverOnline(location);
+
+
+                            });
+
+                });
+
     }
 
     private void drawPathFromCurrentLocation(String destinationLocation) {
@@ -366,7 +425,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
         fusedLocationProviderClient.getLastLocation()
-                .addOnFailureListener(e -> Snackbar.make(requireView(), e.getMessage(), Snackbar.LENGTH_LONG).show())
+                .addOnFailureListener(e ->
+                        Snackbar.make(requireView(), e.getMessage(), Snackbar.LENGTH_LONG).show())
                 .addOnSuccessListener(location -> {
                     //request an api
                     compositeDisposable.add(iGoogleAPI.getDirections("driving",
@@ -422,7 +482,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                     createGeoFireDestinationLocation(driverRequestReceived.getKey(), destination);
 
 
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 160));
+                                     mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 160));
                                     mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom - 2));
 
                                 } catch (Exception e) {
@@ -474,6 +534,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+
         initView(root);
         init();
 
@@ -492,7 +553,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
 
-        geoFire.removeLocation(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//        geoFire.removeLocation(FirebaseAuth.getInstance().getCurrentUser().getUid());
         onlineRef.removeEventListener(onlineValueListener);
 
         if (EventBus.getDefault().hasSubscriberForEvent(DriverRequestReceived.class))
@@ -603,7 +664,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                         // Location follow CiTyName
                         Context context;
-                            makeDriverOnline(locationResult.getLastLocation());
+                        makeDriverOnline(locationResult.getLastLocation());
                     } else {
                         if (!TextUtils.isEmpty(tripNumberID)) {
                             //update location of driver
@@ -668,7 +729,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -873,6 +933,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 });
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void ReceviedNotification(){
+        Log.d("QuocDev_1","OK");
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1043,14 +1108,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         txt_type_uber.setTextColor(color);
     }
 
-
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onNotifyToRider(NotifytoRiderEvent event) {
         Log.d("QuocDev", "ProgessBar");
 
         layout_notify_rider.setVisibility(View.VISIBLE);
         progress_notify.setMax(Common.WAIT_TIME_IN_MIN * 60);
-        waiting_time = new CountDownTimer(Common.WAIT_TIME_IN_MIN * 60 * 1000, 1000) {
+        waiting_time = new CountDownTimer(Common.WAIT_TIME_IN_MIN * 30 * 1000, 1000) {
             @Override
             public void onTick(long l) {
                 progress_notify.setProgress(progress_notify.getProgress() + 1);
@@ -1058,8 +1122,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 txt_notify_rider.setText(String.format("%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(l) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(l)),
                         TimeUnit.MILLISECONDS.toSeconds(l) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(l))));
-
-
             }
 
             @Override

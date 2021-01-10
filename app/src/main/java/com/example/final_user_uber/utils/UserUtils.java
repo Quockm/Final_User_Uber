@@ -195,7 +195,7 @@ public class UserUtils {
         //get token
         FirebaseDatabase
                 .getInstance()
-                .getReference(Common.TOKEN_REFERENCE)
+                .getReference(Common.TOKEN_RIDER_REFERENCE)
                 .child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -207,6 +207,7 @@ public class UserUtils {
 
                             Map<String, String> notificationData = new HashMap<>();
                             notificationData.put(Common.NOTI_TITLE, context.getString(R.string.driver_arrived));
+                            //notificationData.put(Common.NOTI_TITLE, Common.DRIVER_START_UBER);
                             notificationData.put(Common.NOTI_CONTENT, context.getString(R.string.your_driver_arrived));
                             notificationData.put(Common.DRIVER_KEY, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
                             notificationData.put(Common.RIDER_KEY, key);
@@ -269,7 +270,7 @@ public class UserUtils {
                     FirebaseDatabase
                             .getInstance()
                             //.getReference(Common.TOKEN_RIDER_REFERENCE)
-                            .getReference(Common.TOKEN_REFERENCE)
+                            .getReference(Common.TOKEN_RIDER_REFERENCE)
                             .child(key)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -320,6 +321,126 @@ public class UserUtils {
                                     Snackbar.make(view, error.getMessage(), Snackbar.LENGTH_LONG).show();
                                 }
                             });
+                });
+    }
+
+    public static void sendCompleteTripToRider(View view, Context context, String key, String tripNumberID) {
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        IFCMService ifcmService = RetrofitFCMClient.getInstance().create(IFCMService.class);
+
+        //get token
+        FirebaseDatabase
+                .getInstance()
+                //.getReference(Common.TOKEN_RIDER_REFERENCE)
+                .getReference(Common.TOKEN_RIDER_REFERENCE)
+                .child(key)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+                            TokenModel tokenModel = dataSnapshot.getValue(TokenModel.class);
+                            Map<String, String> notificationData = new HashMap<>();
+                            notificationData.put(Common.NOTI_TITLE, Common.RIDER_COMPLETE_TRIP);
+                            notificationData.put(Common.NOTI_CONTENT, "This message represent for driver Complete Trip");
+                            notificationData.put(Common.TRIP_KEY, tripNumberID);
+
+
+                            FCMSendData fcmSendData = new FCMSendData(tokenModel.getToken(), notificationData);
+
+                            compositeDisposable.add(ifcmService.sendNotification(fcmSendData)
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(fcmResponse -> {
+                                        if (fcmResponse.getSuccess() == 0) {
+                                            compositeDisposable.clear();
+                                            Snackbar.make(view, context.getString(R.string.comlete_trip_failed)
+                                                    , Snackbar.LENGTH_LONG).show();
+                                        } else {
+                                            Snackbar.make(view, context.getString(R.string.complete_trip_success)
+                                                    , Snackbar.LENGTH_LONG).show();
+                                        }
+
+                                    }, throwable -> {
+                                        compositeDisposable.clear();
+                                        Snackbar.make(view, throwable.getMessage()
+                                                , Snackbar.LENGTH_LONG).show();
+
+                                    }));
+
+
+                        } else {
+                            compositeDisposable.clear();
+                            Snackbar.make(view, context.getString(R.string.token_not_found)
+                                    , Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        compositeDisposable.clear();
+                        Snackbar.make(view, error.getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    public static void sendStartripToRider(View view, Context context, String key, String tripNumberID) {
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        IFCMService ifcmService = RetrofitFCMClient.getInstance().create(IFCMService.class);
+
+        //get token
+        FirebaseDatabase
+                .getInstance()
+                //.getReference(Common.TOKEN_RIDER_REFERENCE)
+                .getReference(Common.TOKEN_RIDER_REFERENCE)
+                .child(key)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+                            TokenModel tokenModel = dataSnapshot.getValue(TokenModel.class);
+                            Map<String, String> notificationData = new HashMap<>();
+                            notificationData.put(Common.NOTI_TITLE, Common.DRIVER_START_UBER);
+                            notificationData.put(Common.NOTI_CONTENT, "This message represent for driver Start Trip");
+                            notificationData.put(Common.TRIP_KEY, tripNumberID);
+
+
+                            FCMSendData fcmSendData = new FCMSendData(tokenModel.getToken(), notificationData);
+
+                            compositeDisposable.add(ifcmService.sendNotification(fcmSendData)
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(fcmResponse -> {
+                                        if (fcmResponse.getSuccess() == 0) {
+                                            compositeDisposable.clear();
+                                            Snackbar.make(view, context.getString(R.string.comlete_trip_failed)
+                                                    , Snackbar.LENGTH_LONG).show();
+                                        } else {
+                                            Snackbar.make(view, context.getString(R.string.start_trip_success)
+                                                    , Snackbar.LENGTH_LONG).show();
+                                        }
+
+                                    }, throwable -> {
+                                        compositeDisposable.clear();
+                                        Snackbar.make(view, throwable.getMessage()
+                                                , Snackbar.LENGTH_LONG).show();
+
+                                    }));
+
+
+                        } else {
+                            compositeDisposable.clear();
+                            Snackbar.make(view, context.getString(R.string.token_not_found)
+                                    , Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        compositeDisposable.clear();
+                        Snackbar.make(view, error.getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
                 });
     }
 }

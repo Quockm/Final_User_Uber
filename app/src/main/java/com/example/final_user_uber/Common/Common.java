@@ -52,6 +52,10 @@ public class Common {
     public static final int WAIT_TIME_IN_MIN = 1;
     public static final String TRIP_DESTINATION_LOCATION_REF = "TripDestinationLocation";
     public static final String REQUEST_DRIVER_DECLINE_AND_REMOVE = "DeclineAndRemoveTrip";
+    public static final String RIDER_COMPLETE_TRIP = "DriverCompleteTrip";
+    public static final String DRIVER_START_UBER = "DriverStartUber";
+    public static final String SEND_NOTE = "Sendnote";
+
 
     public static DriverInfoModel currentUser;
     public static String Trip = "Trips";

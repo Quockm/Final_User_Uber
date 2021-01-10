@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.final_user_uber.Common.Common;
 import com.example.final_user_uber.model.EvenBus.DriverRequestReceived;
+import com.example.final_user_uber.model.EvenBus.ReceviedNotification;
 import com.example.final_user_uber.utils.UserUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.RemoteMessage;
@@ -45,13 +46,19 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
                 EventBus.getDefault().postSticky(driverRequestReceived);
 
-            } else {
+            } else if (dataRev.get(Common.NOTI_TITLE).equals(Common.SEND_NOTE)) {
 
                 Common.ShowNofication(this, new Random().nextInt(),
                         dataRev.get(Common.NOTI_TITLE),
                         dataRev.get(Common.NOTI_CONTENT),
                         null);
-            }
+                EventBus.getDefault().postSticky(new ReceviedNotification());
+
+            } else
+                Common.ShowNofication(this, new Random().nextInt(),
+                        dataRev.get(Common.NOTI_TITLE),
+                        dataRev.get(Common.NOTI_CONTENT),
+                        null);
         }
     }
 }

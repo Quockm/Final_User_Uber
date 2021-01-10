@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DriverHomeActivity extends AppCompatActivity {
+public class  DriverHomeActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 6169 ;
     private AppBarConfiguration mAppBarConfiguration;
@@ -203,6 +204,7 @@ public class DriverHomeActivity extends AppCompatActivity {
                         }).addOnProgressListener(snapshot -> {
                             double progress = (100.0 * snapshot.getTotalByteCount() / snapshot.getTotalByteCount());
                             waitingDialog.setMessage(new StringBuilder("Uploading: ").append(progress).append("%"));
+                            Log.d("QuocDev","Test upload avatar");
                         });
                     }
                 })
